@@ -9,10 +9,6 @@ interface Remedy {
   name: string
   challenge: string
   transformation: string
-  // Fear-group remedies are presented as their illustrated remedy card instead of text
-  image?: string
-  imageWidth?: number
-  imageHeight?: number
 }
 
 interface Group {
@@ -20,6 +16,61 @@ interface Group {
   name: string
   description: string
   remedies: Remedy[]
+}
+
+interface RemedyImage {
+  src: string
+  width: number
+  height: number
+}
+
+// Illustrated remedy posters (public/remedies), keyed by remedy name.
+// Any remedy present here renders as its image card; others keep the text card.
+const IMG = '/remedies/WhatsApp%20Image%202026-07-11%20at%2015.44.'
+const remedyImages: Record<string, RemedyImage> = {
+  // Fear
+  'Rock Rose': { src: `${IMG}34.jpeg`, width: 1216, height: 1294 },
+  'Mimulus': { src: `${IMG}32.jpeg`, width: 1212, height: 1297 },
+  'Cherry Plum': { src: `${IMG}26%20(2).jpeg`, width: 1214, height: 1296 },
+  'Aspen': { src: `${IMG}23.jpeg`, width: 1204, height: 1306 },
+  'Red Chestnut': { src: `${IMG}33%20(2).jpeg`, width: 1216, height: 1294 },
+  // Uncertainty
+  'Cerato': { src: `${IMG}26%20(1).jpeg`, width: 1199, height: 1312 },
+  'Scleranthus': { src: `${IMG}34%20(2).jpeg`, width: 1216, height: 1294 },
+  'Gentian': { src: `${IMG}29.jpeg`, width: 1216, height: 1294 },
+  'Gorse': { src: `${IMG}29%20(1).jpeg`, width: 1217, height: 1292 },
+  'Hornbeam': { src: `${IMG}30%20(2).jpeg`, width: 1212, height: 1298 },
+  'Wild Oat': { src: `${IMG}37%20(2).jpeg`, width: 1216, height: 1294 },
+  // Insufficient Interest in Present
+  'Clematis': { src: `${IMG}27%20(2).jpeg`, width: 1216, height: 1294 },
+  'Honeysuckle': { src: `${IMG}30%20(1).jpeg`, width: 1216, height: 1294 },
+  'Wild Rose': { src: `${IMG}38.jpeg`, width: 1216, height: 1294 },
+  'Olive': { src: `${IMG}33.jpeg`, width: 1214, height: 1296 },
+  'White Chestnut': { src: `${IMG}37%20(1).jpeg`, width: 1216, height: 1294 },
+  'Mustard': { src: `${IMG}32%20(1).jpeg`, width: 1211, height: 1299 },
+  'Chestnut Bud': { src: `${IMG}27.jpeg`, width: 1204, height: 1306 },
+  // Loneliness
+  'Water Violet': { src: `${IMG}37.jpeg`, width: 1216, height: 1294 },
+  'Impatiens': { src: `${IMG}31.jpeg`, width: 1212, height: 1298 },
+  'Heather': { src: `${IMG}29%20(2).jpeg`, width: 1213, height: 1296 },
+  // Over-sensitivity to Influences
+  'Agrimony': { src: `${IMG}22.jpeg`, width: 1204, height: 1306 },
+  'Centaury': { src: `${IMG}26.jpeg`, width: 1201, height: 1309 },
+  'Walnut': { src: `${IMG}36%20(2).jpeg`, width: 1216, height: 1294 },
+  'Holly': { src: `${IMG}30.jpeg`, width: 1211, height: 1299 },
+  // Despondency or Despair
+  'Larch': { src: `${IMG}31%20(1).jpeg`, width: 1212, height: 1298 },
+  'Pine': { src: `${IMG}33%20(1).jpeg`, width: 1215, height: 1295 },
+  'Elm': { src: `${IMG}28%20(1).jpeg`, width: 1216, height: 1294 },
+  'Sweet Chestnut': { src: `${IMG}35%20(1).jpeg`, width: 1216, height: 1294 },
+  'Star of Bethlehem': { src: `${IMG}35.jpeg`, width: 1209, height: 1300 },
+  'Willow': { src: `${IMG}38%20(1).jpeg`, width: 1216, height: 1294 },
+  // Over-care for Welfare of Others
+  'Chicory': { src: `${IMG}27%20(1).jpeg`, width: 1210, height: 1300 },
+  'Vervain': { src: `${IMG}36.jpeg`, width: 1216, height: 1294 },
+  'Vine': { src: `${IMG}36%20(1).jpeg`, width: 1216, height: 1294 },
+  'Beech': { src: `${IMG}25.jpeg`, width: 1199, height: 1312 },
+  'Rock Water': { src: `${IMG}34%20(1).jpeg`, width: 1216, height: 1294 },
 }
 
 const groups: Group[] = [
@@ -32,41 +83,26 @@ const groups: Group[] = [
         name: 'Rock Rose',
         challenge: 'Terror, extreme fear, panic',
         transformation: 'Courage and presence of mind',
-        image: '/images/WhatsApp%20Image%202026-07-02%20at%2012.35.42.jpeg',
-        imageWidth: 1193,
-        imageHeight: 1318,
       },
       {
         name: 'Mimulus',
         challenge: 'Known fears – illness, pain, accidents, poverty, darkness, being alone',
         transformation: 'Bravery and confidence to face life',
-        image: '/images/WhatsApp%20Image%202026-07-02%20at%2012.35.35%20(2).jpeg',
-        imageWidth: 1402,
-        imageHeight: 1122,
       },
       {
         name: 'Cherry Plum',
         challenge: 'Fear of losing control, uncontrollable rages, impulses',
         transformation: 'Composure and calm even under great strain',
-        image: '/images/WhatsApp%20Image%202026-07-02%20at%2012.35.33.jpeg',
-        imageWidth: 1402,
-        imageHeight: 1122,
       },
       {
         name: 'Aspen',
         challenge: 'Vague, unknown fears, sense of foreboding, anxiety',
         transformation: 'Inner peace and fearlessness',
-        image: '/images/WhatsApp%20Image%202026-07-02%20at%2012.35.30%20(1).jpeg',
-        imageWidth: 1402,
-        imageHeight: 1122,
       },
       {
         name: 'Red Chestnut',
         challenge: 'Excessive fear and worry for loved ones',
         transformation: 'Calm concern and rational care for others',
-        image: '/images/WhatsApp%20Image%202026-07-02%20at%2012.35.41%20(1).jpeg',
-        imageWidth: 1194,
-        imageHeight: 1317,
       },
     ],
   },
@@ -282,7 +318,7 @@ const filterOptions = [
 
 export default function RemediesGroups() {
   const [selectedFilter, setSelectedFilter] = useState('all')
-  const [lightbox, setLightbox] = useState<Remedy | null>(null)
+  const [lightbox, setLightbox] = useState<{ name: string; image: RemedyImage } | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const filteredGroups = selectedFilter === 'all' ? groups : groups.filter((g) => g.id === selectedFilter)
@@ -386,12 +422,13 @@ export default function RemediesGroups() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {group.remedies.map((remedy, idx) =>
-                remedy.image ? (
+              {group.remedies.map((remedy, idx) => {
+                const image = remedyImages[remedy.name]
+                return image ? (
                   <motion.button
                     key={remedy.name}
                     type="button"
-                    onClick={() => setLightbox(remedy)}
+                    onClick={() => setLightbox({ name: remedy.name, image })}
                     aria-label={`View the ${remedy.name} remedy card`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -403,10 +440,10 @@ export default function RemediesGroups() {
                     }}
                   >
                     <Image
-                      src={remedy.image}
+                      src={image.src}
                       alt={`${remedy.name} — Bach flower remedy`}
-                      width={remedy.imageWidth}
-                      height={remedy.imageHeight}
+                      width={image.width}
+                      height={image.height}
                       className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
@@ -446,15 +483,15 @@ export default function RemediesGroups() {
                     </div>
                   </motion.div>
                 )
-              )}
+              })}
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Image lightbox for the Fear remedy cards */}
+      {/* Image lightbox — enlarged remedy poster */}
       <AnimatePresence>
-        {lightbox?.image && (
+        {lightbox && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -485,10 +522,10 @@ export default function RemediesGroups() {
                 <X size={20} />
               </button>
               <Image
-                src={lightbox.image}
+                src={lightbox.image.src}
                 alt={`${lightbox.name} — Bach flower remedy`}
-                width={lightbox.imageWidth}
-                height={lightbox.imageHeight}
+                width={lightbox.image.width}
+                height={lightbox.image.height}
                 className="rounded-xl shadow-2xl"
                 style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '90vh' }}
                 sizes="(max-width: 768px) 90vw, 800px"
