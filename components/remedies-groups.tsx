@@ -65,6 +65,9 @@ const remedyImages: Record<string, RemedyImage> = {
   'Sweet Chestnut': { src: `${IMG}35%20(1).jpeg`, width: 1216, height: 1294 },
   'Star of Bethlehem': { src: `${IMG}35.jpeg`, width: 1209, height: 1300 },
   'Willow': { src: `${IMG}38%20(1).jpeg`, width: 1216, height: 1294 },
+  'Oak': { src: '/remedies/Oak.jpeg', width: 1212, height: 1298 },
+  'Crab Apple': { src: '/remedies/Crab-apple.jpeg', width: 1208, height: 1302 },
+  'Rescue Remedy': { src: '/remedies/Rescue-Remedy.jpeg', width: 1216, height: 1294 },
   // Over-care for Welfare of Others
   'Chicory': { src: `${IMG}27%20(1).jpeg`, width: 1210, height: 1300 },
   'Vervain': { src: `${IMG}36.jpeg`, width: 1216, height: 1294 },
@@ -268,6 +271,21 @@ const groups: Group[] = [
         name: 'Willow',
         challenge: 'Resentment and self-pity.',
         transformation: 'Optimism, acceptance, and personal empowerment.',
+      },
+      {
+        name: 'Oak',
+        challenge: 'Struggling on past exhaustion and never giving up.',
+        transformation: 'Strength with balance and the wisdom to rest.',
+      },
+      {
+        name: 'Crab Apple',
+        challenge: 'Feeling unclean, impure, or ashamed of oneself.',
+        transformation: 'Self-acceptance, cleansing, and inner purity.',
+      },
+      {
+        name: 'Rescue Remedy',
+        challenge: 'Acute stress, shock, panic, or emotional emergency.',
+        transformation: 'Instant calm, comfort, and inner stability.',
       },
     ],
   },
