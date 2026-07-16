@@ -282,11 +282,6 @@ const groups: Group[] = [
         challenge: 'Feeling unclean, impure, or ashamed of oneself.',
         transformation: 'Self-acceptance, cleansing, and inner purity.',
       },
-      {
-        name: 'Rescue Remedy',
-        challenge: 'Acute stress, shock, panic, or emotional emergency.',
-        transformation: 'Instant calm, comfort, and inner stability.',
-      },
     ],
   },
   {
@@ -321,6 +316,18 @@ const groups: Group[] = [
       },
     ],
   },
+  {
+    id: 'rescue-remedy',
+    name: 'Flower Rescue Remedy',
+    description: 'The five-flower combination for moments of stress, shock, panic, and emotional emergency.',
+    remedies: [
+      {
+        name: 'Rescue Remedy',
+        challenge: 'Acute stress, shock, panic, or emotional emergency.',
+        transformation: 'Instant calm, comfort, and inner stability.',
+      },
+    ],
+  },
 ]
 
 const filterOptions = [
@@ -332,6 +339,7 @@ const filterOptions = [
   { id: 'over-sensitivity', label: 'Over-sensitivity to Influences' },
   { id: 'despondency', label: 'Despondency or Despair' },
   { id: 'over-care', label: 'Over-care for Welfare of Others' },
+  { id: 'rescue-remedy', label: 'Flower Rescue Remedy' },
 ]
 
 export default function RemediesGroups() {
