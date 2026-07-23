@@ -47,10 +47,10 @@ export default function Footer() {
             className="lg:col-span-1"
           >
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/HH%20Color%20PNG-8hoYnvCnTetRXVMP35vxOBSfugxLiW.png"
+              src="/hh%20logo%20png.png"
               alt="Holistic Healing Pathways Foundation"
-              width={160}
-              height={54}
+              width={687}
+              height={493}
               className="h-12 w-auto object-contain mb-5 brightness-0 invert opacity-90"
             />
             <p className="font-body text-sm text-white/50 leading-relaxed mb-6">

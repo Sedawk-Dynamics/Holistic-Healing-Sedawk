@@ -46,10 +46,10 @@ export default function Navbar() {
             {/* Logo */}
             <a href="#home" className="flex items-center">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/HH%20Color%20PNG-8hoYnvCnTetRXVMP35vxOBSfugxLiW.png"
+                src="/hh%20logo%20png.png"
                 alt="Holistic Healing Pathways Foundation"
-                width={240}
-                height={70}
+                width={687}
+                height={493}
                 priority
                 className="h-14 w-auto object-contain"
               />
