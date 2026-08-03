@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 
 const navLinks = [
-  { label: 'Home', href: 'https://www.hhpf.in/' },
+  { label: 'Home', href: '/#home' },
   { label: 'About', href: '/#about' },
   { label: 'Therapy', href: '/#therapy' },
   { label: 'Training', href: '/training' },
@@ -44,7 +44,7 @@ export default function Navbar() {
         <div className="max-w-[1500px] mx-auto px-6 xl:px-10">
           <div className="grid grid-cols-[220px_1fr_auto] items-center h-20 gap-8">
             {/* Logo */}
-            <a href="#home" className="flex items-center">
+            <a href="/#home" className="flex items-center">
               <Image
                 src="/images/hero-logo.png"
                 alt="Holistic Healing Pathways Foundation"
