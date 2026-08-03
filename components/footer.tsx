@@ -40,10 +40,10 @@ function LinkedinIcon({ size = 16, className }: IconProps) {
 }
 
 const quickLinks = [
-  { label: 'Home', href: '#home' },
+  { label: 'Home', href: '' },
   { label: 'About', href: '#about' },
   { label: 'Therapy', href: '#therapy' },
-  { label: 'Training Programs', href: '#training' },
+  // { label: 'Training Programs', href: '#training' },
   { label: 'Testimonials', href: '#testimonials' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -55,6 +55,8 @@ const services = [
   { label: 'Children\'s Emotional Health', href: '#therapy' },
   { label: 'Depression Support', href: '#therapy' },
   { label: 'Relationship Healing', href: '#therapy' },
+  { label: ' Healing', href: '#therapy' },
+
 ]
 
 const socialLinks = [
