@@ -81,17 +81,17 @@ export default function CTASection() {
 
             {/* Contact details */}
             <div className="flex flex-col gap-3 pt-2">
-              <a href="tel:+919999999999" className="flex items-center gap-3 group">
+              <a href="tel:+91987146883" className="flex items-center gap-3 group">
                 <div className="w-9 h-9 rounded-xl bg-[#C89A2B]/15 border border-[#C89A2B]/30 flex items-center justify-center flex-shrink-0">
                   <Phone size={14} className="text-[#C89A2B]" />
                 </div>
-                <span className="font-body text-sm text-white/60 group-hover:text-[#C89A2B] transition-colors">+91 99999 99999</span>
+                <span className="font-body text-sm text-white/60 group-hover:text-[#C89A2B] transition-colors">+91 987146883</span>
               </a>
-              <a href="mailto:info@holistichealingpathways.com" className="flex items-center gap-3 group">
+              <a href="mailto:info@hhpf.in" className="flex items-center gap-3 group">
                 <div className="w-9 h-9 rounded-xl bg-[#C89A2B]/15 border border-[#C89A2B]/30 flex items-center justify-center flex-shrink-0">
                   <Mail size={14} className="text-[#C89A2B]" />
                 </div>
-                <span className="font-body text-sm text-white/60 group-hover:text-[#C89A2B] transition-colors">info@holistichealingpathways.com</span>
+                <span className="font-body text-sm text-white/60 group-hover:text-[#C89A2B] transition-colors">info@hhpf.in</span>
               </a>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-[#C89A2B]/15 border border-[#C89A2B]/30 flex items-center justify-center flex-shrink-0">

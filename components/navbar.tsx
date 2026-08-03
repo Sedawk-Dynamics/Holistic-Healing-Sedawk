@@ -46,10 +46,10 @@ export default function Navbar() {
             {/* Logo */}
             <a href="#home" className="flex items-center">
               <Image
-                src="/hh%20logo%20png.png"
+                src="/images/hero-logo.png"
                 alt="Holistic Healing Pathways Foundation"
-                width={687}
-                height={493}
+                width={707}
+                height={206}
                 priority
                 className="h-14 w-auto object-contain"
               />
@@ -82,10 +82,10 @@ export default function Navbar() {
             {/* Right Buttons */}
             <div className="hidden lg:flex items-center gap-3">
               <a
-                href="#social-impact"
+                href="https://lms.hhpf.in/"
                 className="px-4 py-2 rounded-full text-sm font-medium border border-[#3D1578]/20 text-[#3D1578] hover:bg-[#3D1578] hover:text-white transition-all duration-300"
               >
-                Social Impact
+                Login
               </a>
 
               <a

@@ -70,7 +70,7 @@ export default function Hero() {
             className="font-body text-lg md:text-xl leading-relaxed max-w-xl text-pretty"
             style={{ color: '#5A4A6A' }}
           >
-            Heal your emotions, transform your life. IAAH-certified training with global recognition.
+            Heal your emotions, transform your life . Certified training with global recognition.
           </motion.p>
 
           {/* CTA buttons */}
