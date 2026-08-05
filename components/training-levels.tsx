@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Check, Clock, Lightbulb, BookMarked } from 'lucide-react'
+import BookingButton from '@/components/booking-button'
+import type { PlanId } from '@/lib/plans'
 
 const levels = [
   {
@@ -225,7 +227,8 @@ export default function TrainingLevels() {
 
                         {/* CTA Button */}
                         <div className="pt-4 border-t" style={{ borderColor: 'rgba(61,21,120,0.1)' }}>
-                          <button
+                          <BookingButton
+                            planId={`level-${level.id}` as PlanId}
                             className="font-body font-semibold px-8 py-3 rounded-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
                             style={{
                               background: `linear-gradient(135deg, ${level.color}, ${level.color}dd)`,
@@ -233,7 +236,7 @@ export default function TrainingLevels() {
                             }}
                           >
                             Book Now
-                          </button>
+                          </BookingButton>
                         </div>
                       </div>
                     </motion.div>

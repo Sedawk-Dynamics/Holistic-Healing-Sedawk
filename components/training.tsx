@@ -2,9 +2,11 @@
 
 import { motion } from 'framer-motion'
 import { Check, Star } from 'lucide-react'
+import BookingButton from '@/components/booking-button'
 
 const programs = [
   {
+    planId: 'level-1' as const,
     title: 'Foundation Program (Level 1)',
     subtitle: 'Begin Your Healing Education',
     duration: '5 Days',
@@ -26,6 +28,7 @@ const programs = [
     accentColor: '#3D1578',
   },
   {
+    planId: 'level-2' as const,
     title: 'Therapist Certification (Level 2)',
     subtitle: 'Transform Lives Professionally',
     duration: '12 Weeks',
@@ -49,6 +52,7 @@ const programs = [
     dark: true,
   },
   {
+    planId: 'level-3' as const,
     title: 'Advanced Trainer Program (Level 3)',
     subtitle: 'Lead & Teach the Next Generation',
     duration: '52 Weeks',
@@ -168,13 +172,13 @@ export default function Training() {
                 ))}
               </ul>
 
-              <a
-                href="#contact"
+              <BookingButton
+                planId={plan.planId}
                 className={`block w-full text-center px-6 py-3.5 rounded-2xl font-body font-semibold text-sm
                   transition-all duration-300 ${plan.buttonStyle}`}
               >
                 Book Now
-              </a>
+              </BookingButton>
             </motion.div>
           ))}
         </div>
