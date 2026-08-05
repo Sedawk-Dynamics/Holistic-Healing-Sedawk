@@ -175,9 +175,9 @@ export default function CTASection() {
                         focus:outline-none focus:border-[#C89A2B]/60 transition-all duration-200 appearance-none cursor-pointer"
                     >
                       <option value="therapy" className="bg-[#3D1578] text-white">Personal Therapy / Consultation</option>
-                      <option value="foundation" className="bg-[#3D1578] text-white">Level 1 — Foundation Program</option>
-                      <option value="certification" className="bg-[#3D1578] text-white">Level 2 — Therapist Certification</option>
-                      <option value="trainer" className="bg-[#3D1578] text-white">Level 3 — Advanced Trainer Program</option>
+                      <option value="foundation" className="bg-[#3D1578] text-white">Foundation Program (Level 1)</option>
+                      <option value="certification" className="bg-[#3D1578] text-white">Therapist Certification (Level 2)</option>
+                      <option value="trainer" className="bg-[#3D1578] text-white">Advanced Trainer Program (Level 3)</option>
                       <option value="general" className="bg-[#3D1578] text-white">General Inquiry</option>
                     </select>
                   </div>

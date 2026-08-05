@@ -5,8 +5,8 @@ import { Check, Star } from 'lucide-react'
 
 const programs = [
   {
-    title: 'Level 1',
-    subtitle: 'Foundation Program — Begin Your Healing Education',
+    title: 'Foundation Program (Level 1)',
+    subtitle: 'Begin Your Healing Education',
     duration: '5 Days',
     price: '₹5,000',
     priceNote: '',
@@ -26,8 +26,8 @@ const programs = [
     accentColor: '#3D1578',
   },
   {
-    title: 'Level 2',
-    subtitle: 'Therapist Certification — Transform Lives Professionally',
+    title: 'Therapist Certification (Level 2)',
+    subtitle: 'Transform Lives Professionally',
     duration: '12 Weeks',
     price: '₹30,000',
     priceNote: 'EMI available',
@@ -49,8 +49,8 @@ const programs = [
     dark: true,
   },
   {
-    title: 'Level 3',
-    subtitle: 'Advanced Trainer Program — Lead & Teach the Next Generation',
+    title: 'Advanced Trainer Program (Level 3)',
+    subtitle: 'Lead & Teach the Next Generation',
     duration: '52 Weeks',
     price: '₹60,000',
     priceNote: 'Flexible payment plans',
