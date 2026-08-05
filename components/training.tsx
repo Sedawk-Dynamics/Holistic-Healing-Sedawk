@@ -5,11 +5,11 @@ import { Check, Star } from 'lucide-react'
 
 const programs = [
   {
-    title: 'Foundation Program',
-    subtitle: 'Begin Your Healing Education',
-    duration: '4 Weeks',
-    price: '₹8,999',
-    priceNote: 'or ₹3,000/month',
+    title: 'Level 1',
+    subtitle: 'Foundation Program — Begin Your Healing Education',
+    duration: '5 Days',
+    price: '₹5,000',
+    priceNote: '',
     description: 'Perfect for individuals curious about Bach Flower Therapy who want to understand the essences and use them for personal healing.',
     features: [
       'Introduction to all 38 flower essences',
@@ -26,10 +26,10 @@ const programs = [
     accentColor: '#3D1578',
   },
   {
-    title: 'Therapist Certification',
-    subtitle: 'Transform Lives Professionally',
+    title: 'Level 2',
+    subtitle: 'Therapist Certification — Transform Lives Professionally',
     duration: '12 Weeks',
-    price: '₹24,999',
+    price: '₹30,000',
     priceNote: 'EMI available',
     description: 'A comprehensive practitioner program that equips you to offer professional Bach Flower Therapy consultations.',
     features: [
@@ -49,10 +49,10 @@ const programs = [
     dark: true,
   },
   {
-    title: 'Advanced Trainer Program',
-    subtitle: 'Lead & Teach the Next Generation',
-    duration: '20 Weeks',
-    price: '₹49,999',
+    title: 'Level 3',
+    subtitle: 'Advanced Trainer Program — Lead & Teach the Next Generation',
+    duration: '52 Weeks',
+    price: '₹60,000',
     priceNote: 'Flexible payment plans',
     description: 'The elite track for experienced practitioners who wish to teach, train, and lead workshops on Bach Flower Therapy globally.',
     features: [
@@ -173,7 +173,7 @@ export default function Training() {
                 className={`block w-full text-center px-6 py-3.5 rounded-2xl font-body font-semibold text-sm
                   transition-all duration-300 ${plan.buttonStyle}`}
               >
-                Enroll Now
+                Book Now
               </a>
             </motion.div>
           ))}

@@ -10,6 +10,7 @@ const levels = [
     title: 'Introduction to Bach Flower Therapy',
     subtitle: 'Level-1 • Foundation Course',
     duration: '5 Days',
+    price: '₹5,000',
     hours: '10–15 Hours',
     description: 'Understand the philosophy of Dr. Edward Bach, emotional states, and basic practical use of all 38 remedies.',
     practicals: [
@@ -30,7 +31,8 @@ const levels = [
     id: 2,
     title: 'Intermediate Practitioner Course',
     subtitle: 'Level-2 • Deep Emotional Analysis & Clinical Application',
-    duration: '1 Month',
+    duration: '12 Weeks',
+    price: '₹30,000',
     hours: '60–70 Hours',
     description: 'Understand deeper emotional layers, personality structures, psychosomatic patterns, and advanced case handling.',
     practicals: [
@@ -51,7 +53,8 @@ const levels = [
     id: 3,
     title: 'Professional & Integrative Healing Mastery',
     subtitle: 'Advanced Level • Become a Master Practitioner',
-    duration: '12 Months',
+    duration: '52 Weeks',
+    price: '₹60,000',
     hours: '1 Year Full Program',
     description: 'Train students for professional practice, teaching, advanced emotional decoding, and integrative healing with astrology, chakras, and energy work.',
     practicals: [
@@ -131,6 +134,9 @@ export default function TrainingLevels() {
                         <div className="flex items-center gap-2" style={{ color: '#5A4A6A' }}>
                           <BookMarked size={18} />
                           <span className="font-body text-sm">{level.hours}</span>
+                        </div>
+                        <div className="flex items-center gap-1" style={{ color: level.color }}>
+                          <span className="font-heading text-lg font-bold">{level.price}</span>
                         </div>
                       </div>
                     </div>
@@ -226,7 +232,7 @@ export default function TrainingLevels() {
                               color: '#F8F5F0',
                             }}
                           >
-                            Enroll in Level {level.id}
+                            Book Now
                           </button>
                         </div>
                       </div>
