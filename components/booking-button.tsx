@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, type CSSProperties, type ReactNode } from 'react'
+import { useState, useEffect, type CSSProperties, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Loader2, ShieldCheck } from 'lucide-react'
 import { PLANS, type PlanId } from '@/lib/plans'
@@ -41,6 +42,9 @@ export default function BookingButton({ planId, className, style, children }: Pr
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   const close = () => {
     if (busy) return
@@ -127,14 +131,9 @@ export default function BookingButton({ planId, className, style, children }: Pr
   const field =
     'w-full rounded-xl px-4 py-3 font-body text-sm text-[#1A0A35] bg-[#F5F0FF] border border-[#E8DEF8] focus:outline-none focus:border-[#3D1578] transition-colors'
 
-  return (
-    <>
-      <button type="button" className={className} style={style} onClick={() => setOpen(true)}>
-        {children}
-      </button>
-
-      <AnimatePresence>
-        {open && (
+  const modal = (
+    <AnimatePresence>
+      {open && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -232,6 +231,26 @@ export default function BookingButton({ planId, className, style, children }: Pr
           </motion.div>
         )}
       </AnimatePresence>
+  )
+
+  return (
+    <>
+      <button
+        type="button"
+        className={className}
+        style={style}
+        onClick={(e) => {
+          // Prevent the click from bubbling to parent handlers (e.g. the /training
+          // accordion toggle), which would collapse the panel and unmount the modal.
+          e.stopPropagation()
+          setOpen(true)
+        }}
+      >
+        {children}
+      </button>
+
+      {/* Render the modal on document.body so it isn't affected by parent transforms/unmounts. */}
+      {mounted ? createPortal(modal, document.body) : null}
     </>
   )
 }
