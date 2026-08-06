@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
   const callbackUrl = `${req.nextUrl.origin}/api/paytm/callback?orderId=${orderId}`
 
   const custId = `CUST_${orderId}`
+  const mobile = (phone.match(/\d/g) || []).join('').slice(-10)
   const body = {
     requestType: 'Payment',
     mid: cfg.mid,
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
     orderId,
     callbackUrl,
     txnAmount: { value: amount, currency: 'INR' },
-    userInfo: { custId, email, mobile: phone },
+    userInfo: { custId, email, mobile },
   }
 
   const signature = await generateSignature(JSON.stringify(body), cfg.key)

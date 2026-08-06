@@ -77,7 +77,7 @@ export default function BookingButton({ planId, className, style, children }: Pr
         return
       }
 
-      await Paytm.CheckoutJS.init({
+      const config = {
         root: '',
         flow: 'DEFAULT',
         data: {
@@ -91,11 +91,27 @@ export default function BookingButton({ planId, className, style, children }: Pr
             if (eventName === 'APP_CLOSED') setBusy(false)
           },
         },
-      })
-      Paytm.CheckoutJS.invoke()
+      }
+
+      const start = () => {
+        Promise.resolve(Paytm.CheckoutJS.init(config))
+          .then(() => Paytm.CheckoutJS.invoke())
+          .catch((err: unknown) => {
+            console.error('[paytm checkout]', err)
+            const msg = err instanceof Error ? err.message : String(err)
+            setError(`Payment could not open${msg ? `: ${msg}` : ''}. Please try again.`)
+            setBusy(false)
+          })
+      }
+
+      // Paytm's script needs to signal it is fully ready before init() is called.
+      if (typeof Paytm.CheckoutJS.onLoad === 'function') Paytm.CheckoutJS.onLoad(start)
+      else start()
       // Paytm now takes over; on completion it redirects to /api/paytm/callback.
-    } catch {
-      setError('Something went wrong. Please try again.')
+    } catch (err) {
+      console.error('[booking]', err)
+      const msg = err instanceof Error ? err.message : String(err)
+      setError(`Something went wrong${msg ? `: ${msg}` : ''}. Please try again.`)
       setBusy(false)
     }
   }
