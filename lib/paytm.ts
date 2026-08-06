@@ -17,7 +17,8 @@ export function paytmConfig() {
     mid: process.env.PAYTM_MID || '',
     key: process.env.PAYTM_MERCHANT_KEY || '',
     website: process.env.PAYTM_WEBSITE || 'WEBSTAGING',
-    host: isProd ? 'https://securegw.paytm.in' : 'https://securegw-stage.paytm.in',
+    // Paytm migrated hosts (Aug 2025). Old securegw*.paytm.in return "501 System Error".
+    host: isProd ? 'https://secure.paytmpayments.com' : 'https://securestage.paytmpayments.com',
     isProd,
   }
 }
