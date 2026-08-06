@@ -5,7 +5,7 @@ import { motion, useInView } from 'framer-motion'
 import { Users, Flower, Shield, Zap } from 'lucide-react'
 
 const stats = [
-  { icon: Users, value: 700, suffix: '+', label: 'Lives Transformed', description: 'Individuals healed naturally', color: 'text-[#3D1578]', bg: 'from-[#3D1578]/10 to-[#3D1578]/5' },
+  { icon: Users, value: 20, suffix: 'k+', label: 'Lives Transformed', description: 'Individuals healed naturally', color: 'text-[#B8A5E5]', bg: 'from-[#B8A5E5]/30 to-[#B8A5E5]/10' },
   { icon: Flower, value: 38, suffix: '', label: 'Healing Flower Remedies', description: 'Dr. Bach\'s original system', color: 'text-[#C89A2B]', bg: 'from-[#C89A2B]/15 to-[#C89A2B]/5' },
   { icon: Shield, value: 100, suffix: '%', label: 'Natural & Safe', description: 'Clinically gentle healing', color: 'text-[#76C043]', bg: 'from-[#76C043]/15 to-[#76C043]/5' },
   { icon: Zap, value: 0, suffix: '', label: 'Side Effects', description: 'Safe for all ages', color: 'text-[#B8A5E5]', bg: 'from-[#B8A5E5]/30 to-[#B8A5E5]/10' },
