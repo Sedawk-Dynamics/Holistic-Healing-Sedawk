@@ -6,12 +6,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Loader2, ShieldCheck } from 'lucide-react'
 import { PLANS, type PlanId } from '@/lib/plans'
 
-// Load the Paytm Checkout JS for a given merchant once.
-let paytmScriptPromise: Promise<void> | null = null
-function loadPaytm(host: string, mid: string) {
-  if (paytmScriptPromise) return paytmScriptPromise
-  paytmScriptPromise = new Promise<void>((resolve, reject) => {
-    const src = `${host}/merchantpgpui/checkoutjs/merchants/${mid}.js`
+// Load the Razorpay Checkout script once.
+let razorpayScriptPromise: Promise<void> | null = null
+function loadRazorpay() {
+  if (razorpayScriptPromise) return razorpayScriptPromise
+  razorpayScriptPromise = new Promise<void>((resolve, reject) => {
+    const src = 'https://checkout.razorpay.com/v1/checkout.js'
     if (document.querySelector(`script[src="${src}"]`)) {
       resolve()
       return
@@ -21,12 +21,28 @@ function loadPaytm(host: string, mid: string) {
     s.async = true
     s.onload = () => resolve()
     s.onerror = () => {
-      paytmScriptPromise = null
-      reject(new Error('Failed to load Paytm'))
+      razorpayScriptPromise = null
+      reject(new Error('Failed to load Razorpay'))
     }
     document.body.appendChild(s)
   })
-  return paytmScriptPromise
+  return razorpayScriptPromise
+}
+
+// Email the booking + payment details via Web3Forms (must run in the browser on the free plan).
+async function sendBookingEmail(fields: Record<string, string>) {
+  const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY
+  if (!accessKey) return
+  await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      access_key: accessKey,
+      subject: `New Booking — ${fields.Program} (${fields.Payment_Status})`,
+      from_name: 'HHPF Website Booking',
+      ...fields,
+    }),
+  }).catch(() => {})
 }
 
 type Props = {
@@ -61,57 +77,80 @@ export default function BookingButton({ planId, className, style, children }: Pr
     }
     setBusy(true)
     try {
-      const res = await fetch('/api/paytm/initiate', {
+      const res = await fetch('/api/razorpay/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: planId, ...form }),
       })
       const data = await res.json()
-      if (!res.ok || !data.txnToken) {
+      if (!res.ok || !data.orderId) {
         setError(data.error || 'Could not start the payment. Please try again.')
         setBusy(false)
         return
       }
 
-      await loadPaytm(data.host, data.mid)
-      const Paytm = (window as unknown as { Paytm?: any }).Paytm
-      if (!Paytm?.CheckoutJS) {
+      await loadRazorpay()
+      const Razorpay = (window as unknown as { Razorpay?: any }).Razorpay
+      if (!Razorpay) {
         setError('Payment gateway is unavailable right now. Please try again later.')
         setBusy(false)
         return
       }
 
-      const config = {
-        root: '',
-        flow: 'DEFAULT',
-        data: {
-          orderId: data.orderId,
-          token: data.txnToken,
-          tokenType: 'TXN_TOKEN',
-          amount: data.amount,
-        },
-        handler: {
-          notifyMerchant: (eventName: string) => {
-            if (eventName === 'APP_CLOSED') setBusy(false)
-          },
-        },
-      }
-
-      const start = () => {
-        Promise.resolve(Paytm.CheckoutJS.init(config))
-          .then(() => Paytm.CheckoutJS.invoke())
-          .catch((err: unknown) => {
-            console.error('[paytm checkout]', err)
-            const msg = err instanceof Error ? err.message : String(err)
-            setError(`Payment could not open${msg ? `: ${msg}` : ''}. Please try again.`)
+      const rzp = new Razorpay({
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        order_id: data.orderId,
+        name: 'Holistic Healing Pathways Foundation',
+        description: plan.name,
+        image: '/images/hero-logo.png',
+        prefill: { name: form.name, email: form.email, contact: form.phone },
+        notes: { program: plan.name },
+        theme: { color: '#3D1578' },
+        handler: async (response: {
+          razorpay_order_id: string
+          razorpay_payment_id: string
+          razorpay_signature: string
+        }) => {
+          try {
+            const vr = await fetch('/api/razorpay/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(response),
+            })
+            const vd = await vr.json()
+            if (!vd.valid) {
+              setError('Payment could not be verified. If money was deducted, please contact us.')
+              setBusy(false)
+              return
+            }
+            await sendBookingEmail({
+              Program: plan.name,
+              Name: form.name,
+              Email: form.email,
+              Phone: form.phone,
+              Message: form.message || '—',
+              Payment_Status: 'SUCCESS',
+              Order_Id: response.razorpay_order_id,
+              Payment_Id: response.razorpay_payment_id,
+              Amount_Paid: `₹${plan.amount.toLocaleString('en-IN')}`,
+            })
+            window.location.href = `/booking/thank-you?status=success&order=${encodeURIComponent(
+              response.razorpay_order_id,
+            )}`
+          } catch {
+            setError('Something went wrong after payment. Please contact us with your payment id.')
             setBusy(false)
-          })
-      }
-
-      // Paytm's script needs to signal it is fully ready before init() is called.
-      if (typeof Paytm.CheckoutJS.onLoad === 'function') Paytm.CheckoutJS.onLoad(start)
-      else start()
-      // Paytm now takes over; on completion it redirects to /api/paytm/callback.
+          }
+        },
+        modal: { ondismiss: () => setBusy(false) },
+      })
+      rzp.on('payment.failed', (resp: { error?: { description?: string } }) => {
+        setError(resp?.error?.description || 'Payment failed. Please try again.')
+        setBusy(false)
+      })
+      rzp.open()
     } catch (err) {
       console.error('[booking]', err)
       const msg = err instanceof Error ? err.message : String(err)
@@ -134,103 +173,103 @@ export default function BookingButton({ planId, className, style, children }: Pr
   const modal = (
     <AnimatePresence>
       {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-100 flex items-center justify-center p-4"
+          style={{ background: 'rgba(26,10,53,0.85)' }}
+          onClick={close}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Book ${plan.name}`}
+        >
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-100 flex items-center justify-center p-4"
-            style={{ background: 'rgba(26,10,53,0.85)' }}
-            onClick={close}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Book ${plan.name}`}
+            className="relative w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="relative w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Close"
+              disabled={busy}
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-[#3D1578] transition-colors hover:bg-[#F5F0FF] disabled:opacity-40"
             >
-              <button
-                type="button"
-                onClick={close}
-                aria-label="Close"
+              <X size={18} />
+            </button>
+
+            <h3 className="font-heading text-2xl font-bold text-[#3D1578]">Book Your Seat</h3>
+            <p className="mt-1 font-body text-sm text-[#5A4A6A]">{plan.name}</p>
+            <div className="mt-3 mb-5 flex items-baseline gap-2">
+              <span className="font-heading text-3xl font-bold text-[#3D1578]">
+                ₹{plan.amount.toLocaleString('en-IN')}
+              </span>
+              <span className="font-body text-sm text-[#7A6A9A]">· {plan.duration}</span>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <input
+                className={field}
+                placeholder="Full name *"
+                value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 disabled={busy}
-                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-[#3D1578] transition-colors hover:bg-[#F5F0FF] disabled:opacity-40"
+              />
+              <input
+                className={field}
+                type="email"
+                placeholder="Email address *"
+                value={form.email}
+                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                disabled={busy}
+              />
+              <input
+                className={field}
+                type="tel"
+                placeholder="Phone number *"
+                value={form.phone}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                disabled={busy}
+              />
+              <textarea
+                className={`${field} resize-none`}
+                rows={3}
+                placeholder="Anything you'd like us to know (optional)"
+                value={form.message}
+                onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                disabled={busy}
+              />
+
+              {error && <p className="font-body text-sm text-[#B23B3B]">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={busy}
+                className="mt-1 flex items-center justify-center gap-2 rounded-full bg-[#3D1578] px-6 py-3.5 font-body text-sm font-semibold text-white transition-all hover:bg-[#51209d] disabled:opacity-60"
               >
-                <X size={18} />
+                {busy ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" /> Starting secure payment…
+                  </>
+                ) : (
+                  <>Proceed to Payment · ₹{plan.amount.toLocaleString('en-IN')}</>
+                )}
               </button>
 
-              <h3 className="font-heading text-2xl font-bold text-[#3D1578]">Book Your Seat</h3>
-              <p className="mt-1 font-body text-sm text-[#5A4A6A]">{plan.name}</p>
-              <div className="mt-3 mb-5 flex items-baseline gap-2">
-                <span className="font-heading text-3xl font-bold text-[#3D1578]">
-                  ₹{plan.amount.toLocaleString('en-IN')}
-                </span>
-                <span className="font-body text-sm text-[#7A6A9A]">· {plan.duration}</span>
-              </div>
-
-              <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-                <input
-                  className={field}
-                  placeholder="Full name *"
-                  value={form.name}
-                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  disabled={busy}
-                />
-                <input
-                  className={field}
-                  type="email"
-                  placeholder="Email address *"
-                  value={form.email}
-                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                  disabled={busy}
-                />
-                <input
-                  className={field}
-                  type="tel"
-                  placeholder="Phone number *"
-                  value={form.phone}
-                  onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                  disabled={busy}
-                />
-                <textarea
-                  className={`${field} resize-none`}
-                  rows={3}
-                  placeholder="Anything you'd like us to know (optional)"
-                  value={form.message}
-                  onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-                  disabled={busy}
-                />
-
-                {error && <p className="font-body text-sm text-[#B23B3B]">{error}</p>}
-
-                <button
-                  type="submit"
-                  disabled={busy}
-                  className="mt-1 flex items-center justify-center gap-2 rounded-full bg-[#3D1578] px-6 py-3.5 font-body text-sm font-semibold text-white transition-all hover:bg-[#51209d] disabled:opacity-60"
-                >
-                  {busy ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" /> Starting secure payment…
-                    </>
-                  ) : (
-                    <>Proceed to Payment · ₹{plan.amount.toLocaleString('en-IN')}</>
-                  )}
-                </button>
-
-                <p className="mt-1 flex items-center justify-center gap-1.5 font-body text-xs text-[#7A6A9A]">
-                  <ShieldCheck size={13} className="text-[#76C043]" />
-                  Secure payment via Paytm. You&apos;ll be redirected to complete it.
-                </p>
-              </form>
-            </motion.div>
+              <p className="mt-1 flex items-center justify-center gap-1.5 font-body text-xs text-[#7A6A9A]">
+                <ShieldCheck size={13} className="text-[#76C043]" />
+                Secure payment via Razorpay.
+              </p>
+            </form>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 
   return (

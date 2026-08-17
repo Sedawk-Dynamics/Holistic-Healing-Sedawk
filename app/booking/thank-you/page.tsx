@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import BookingEmailer from '@/components/booking-emailer'
 
 export const metadata: Metadata = {
   title: 'Booking Status | Holistic Healing Pathways Foundation',
@@ -45,7 +44,6 @@ export default async function ThankYouPage({
 
   return (
     <main className="relative">
-      <BookingEmailer />
       <Navbar />
       <section className="min-h-[70vh] flex items-center justify-center px-4 py-32" style={{ background: '#FDFCFF' }}>
         <div
