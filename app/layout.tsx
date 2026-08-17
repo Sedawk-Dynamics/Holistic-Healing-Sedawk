@@ -8,6 +8,7 @@ const inter = Inter({
   display: 'swap',
 })
 
+
 const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant',
   subsets: ['latin'],
