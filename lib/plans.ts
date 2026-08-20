@@ -4,6 +4,8 @@ export const PLANS = {
   'level-1': { id: 'level-1', name: 'Foundation Program (Level 1)', amount: 5000, duration: '5 Days' },
   'level-2': { id: 'level-2', name: 'Therapist Certification (Level 2)', amount: 30000, duration: '12 Weeks' },
   'level-3': { id: 'level-3', name: 'Advanced Trainer Program (Level 3)', amount: 60000, duration: '52 Weeks' },
+  'nadi-certification': { id: 'nadi-certification', name: 'Nadi Nakshatra Astrology (Certification Course)', amount: 65000, duration: '6-month program · 21 modules' },
+  'nadi-prediction': { id: 'nadi-prediction', name: 'Nadi Prediction (Personal Reading)', amount: 3100, duration: 'One-time session' },
 } as const
 
 export type PlanId = keyof typeof PLANS
