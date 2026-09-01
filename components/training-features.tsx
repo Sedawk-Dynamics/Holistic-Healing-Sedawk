@@ -17,7 +17,7 @@ const features = [
   {
     icon: Award,
     title: 'Industry Recognized',
-    description: 'IAAH-certified training with global recognition and professional credentials',
+    description: 'Certified training with global recognition and professional credentials',
   },
   {
     icon: Zap,
