@@ -89,7 +89,7 @@ export default function Navbar() {
               </a>
 
               <a
-                href="#shop"
+                href="/#products"
                 className="px-4 py-2 rounded-full text-sm font-medium border border-[#C89A2B]/30 text-[#C89A2B] hover:bg-[#C89A2B] hover:text-white transition-all duration-300"
               >
                 Shop
@@ -154,7 +154,7 @@ export default function Navbar() {
                 </a>
 
                 <a
-                  href="#shop"
+                  href="/#products"
                   className="py-3 rounded-full border border-[#C89A2B]/30 text-center text-[#C89A2B] font-medium hover:bg-[#C89A2B] hover:text-white transition-all"
                 >
                   Shop

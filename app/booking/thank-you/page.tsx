@@ -37,10 +37,20 @@ type Status = keyof typeof STATES
 export default async function ThankYouPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; order?: string }>
+  searchParams: Promise<{ status?: string; order?: string; type?: string }>
 }) {
-  const { status, order } = await searchParams
-  const state = STATES[(status as Status) in STATES ? (status as Status) : 'failed']
+  const { status, order, type } = await searchParams
+  const isProduct = type === 'product'
+  const base = STATES[(status as Status) in STATES ? (status as Status) : 'failed']
+  const state =
+    isProduct && base === STATES.success
+      ? {
+          ...base,
+          heading: 'Order Confirmed',
+          message:
+            'Your payment was successful and your order has been received. Our team will contact you shortly to confirm dispatch and delivery details.',
+        }
+      : base
 
   return (
     <main className="relative">
@@ -64,11 +74,11 @@ export default async function ThankYouPage({
           )}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              href="/#training"
+              href={isProduct ? '/#products' : '/#training'}
               className="px-6 py-3 rounded-full font-body font-semibold text-sm text-white transition-all hover:-translate-y-0.5"
               style={{ background: '#3D1578' }}
             >
-              Back to Programs
+              {isProduct ? 'Back to Products' : 'Back to Programs'}
             </Link>
             <a
               href="mailto:info@hhpf.in"

@@ -38,7 +38,7 @@ async function sendBookingEmail(fields: Record<string, string>) {
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify({
       access_key: accessKey,
-      subject: `New Booking — ${fields.Program} (${fields.Payment_Status})`,
+      subject: `${fields.Product ? 'New Order' : 'New Booking'} — ${fields.Product || fields.Program} (${fields.Payment_Status})`,
       from_name: 'HHPF Website Booking',
       ...fields,
     }),
@@ -54,10 +54,11 @@ type Props = {
 
 export default function BookingButton({ planId, className, style, children }: Props) {
   const plan = PLANS[planId]
+  const isProduct = plan?.kind === 'product'
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', message: '' })
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => setMounted(true), [])
@@ -73,6 +74,10 @@ export default function BookingButton({ planId, className, style, children }: Pr
     setError('')
     if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
       setError('Please fill in your name, email and phone number.')
+      return
+    }
+    if (isProduct && !form.address.trim()) {
+      setError('Please enter your shipping address.')
       return
     }
     setBusy(true)
@@ -106,7 +111,7 @@ export default function BookingButton({ planId, className, style, children }: Pr
         description: plan.name,
         image: '/images/hero-logo.png',
         prefill: { name: form.name, email: form.email, contact: form.phone },
-        notes: { program: plan.name },
+        notes: { [isProduct ? 'product' : 'program']: plan.name },
         theme: { color: '#3D1578' },
         handler: async (response: {
           razorpay_order_id: string
@@ -126,7 +131,9 @@ export default function BookingButton({ planId, className, style, children }: Pr
               return
             }
             await sendBookingEmail({
-              Program: plan.name,
+              ...(isProduct
+                ? { Product: plan.name, Shipping_Address: form.address }
+                : { Program: plan.name }),
               Name: form.name,
               Email: form.email,
               Phone: form.phone,
@@ -138,7 +145,7 @@ export default function BookingButton({ planId, className, style, children }: Pr
             })
             window.location.href = `/booking/thank-you?status=success&order=${encodeURIComponent(
               response.razorpay_order_id,
-            )}`
+            )}${isProduct ? '&type=product' : ''}`
           } catch {
             setError('Something went wrong after payment. Please contact us with your payment id.')
             setBusy(false)
@@ -183,7 +190,7 @@ export default function BookingButton({ planId, className, style, children }: Pr
           onClick={close}
           role="dialog"
           aria-modal="true"
-          aria-label={`Book ${plan.name}`}
+          aria-label={`${isProduct ? 'Buy' : 'Book'} ${plan.name}`}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -203,7 +210,9 @@ export default function BookingButton({ planId, className, style, children }: Pr
               <X size={18} />
             </button>
 
-            <h3 className="font-heading text-2xl font-bold text-[#3D1578]">Book Your Seat</h3>
+            <h3 className="font-heading text-2xl font-bold text-[#3D1578]">
+              {isProduct ? 'Complete Your Order' : 'Book Your Seat'}
+            </h3>
             <p className="mt-1 font-body text-sm text-[#5A4A6A]">{plan.name}</p>
             <div className="mt-3 mb-5 flex items-baseline gap-2">
               <span className="font-heading text-3xl font-bold text-[#3D1578]">
@@ -236,9 +245,19 @@ export default function BookingButton({ planId, className, style, children }: Pr
                 onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                 disabled={busy}
               />
+              {isProduct && (
+                <textarea
+                  className={`${field} resize-none`}
+                  rows={3}
+                  placeholder="Shipping address with PIN code *"
+                  value={form.address}
+                  onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+                  disabled={busy}
+                />
+              )}
               <textarea
                 className={`${field} resize-none`}
-                rows={3}
+                rows={isProduct ? 2 : 3}
                 placeholder="Anything you'd like us to know (optional)"
                 value={form.message}
                 onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}

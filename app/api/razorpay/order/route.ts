@@ -10,18 +10,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Payment is not configured yet.' }, { status: 500 })
   }
 
-  let payload: { plan?: string; name?: string; email?: string; phone?: string; message?: string }
+  let payload: {
+    plan?: string
+    name?: string
+    email?: string
+    phone?: string
+    message?: string
+    address?: string
+  }
   try {
     payload = await req.json()
   } catch {
     return NextResponse.json({ error: 'Invalid request.' }, { status: 400 })
   }
 
-  const { plan, name, email, phone } = payload
+  const { plan, name, email, phone, address } = payload
   const selected = plan ? PLANS[plan as PlanId] : undefined
-  if (!selected) return NextResponse.json({ error: 'Invalid program selected.' }, { status: 400 })
+  if (!selected) return NextResponse.json({ error: 'Invalid item selected.' }, { status: 400 })
   if (!name || !email || !phone) {
     return NextResponse.json({ error: 'Name, email and phone are required.' }, { status: 400 })
+  }
+  const isProduct = selected.kind === 'product'
+  if (isProduct && !address?.trim()) {
+    return NextResponse.json({ error: 'Shipping address is required.' }, { status: 400 })
   }
 
   // Server derives the amount from the plan id (in paise) — never trusts a client price.
@@ -38,7 +49,14 @@ export async function POST(req: NextRequest) {
         amount: amountPaise,
         currency: 'INR',
         receipt,
-        notes: { program: selected.name, name, email, phone },
+        // Razorpay note values are limited to 256 chars each.
+        notes: {
+          [isProduct ? 'product' : 'program']: selected.name,
+          name,
+          email,
+          phone,
+          ...(isProduct ? { address: address!.trim().slice(0, 250) } : {}),
+        },
       }),
     })
     order = await res.json()

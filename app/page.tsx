@@ -8,6 +8,7 @@ import Approach from '@/components/approach'
 import WhyChoose from '@/components/why-choose'
 import HealingJourney from '@/components/healing-journey'
 import Remedies from '@/components/remedies'
+import Products from '@/components/products'
 import Training from '@/components/training'
 import Testimonials from '@/components/testimonials'
 import FAQ from '@/components/faq'
@@ -27,6 +28,7 @@ export default function Home() {
       <WhyChoose />
       <HealingJourney />
       <Remedies />
+      <Products />
       <Training />
       <Testimonials />
       <FAQ />
