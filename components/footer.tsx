@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Globe, ArrowRight } from 'lucide-react'
+import { LMS_LOGIN_URL } from '@/lib/links'
 
 // Brand icons (lucide-react in this project ships no brand marks, so inline SVGs)
 type IconProps = { size?: number; className?: string }
@@ -46,6 +47,7 @@ const quickLinks = [
   { label: 'Products', href: 'https://www.hhpf.in/#products' },
   { label: 'Testimonials', href: 'https://www.hhpf.in/#testimonials' },
   { label: 'Contact', href: 'https://www.hhpf.in/contact' },
+  { label: 'Login to LMS', href: LMS_LOGIN_URL },
 ]
 
 const services = [

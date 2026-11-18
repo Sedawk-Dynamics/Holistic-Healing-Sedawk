@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import { LMS_LOGIN_URL } from '@/lib/links'
 
 const navLinks = [
   { label: 'Home', href: 'https://www.hhpf.in/' },
@@ -82,10 +83,10 @@ export default function Navbar() {
             {/* Right Buttons */}
             <div className="hidden lg:flex items-center gap-3">
               <a
-                href="https://lms.hhpf.in/"
+                href={LMS_LOGIN_URL}
                 className="px-4 py-2 rounded-full text-sm font-medium border border-[#3D1578]/20 text-[#3D1578] hover:bg-[#3D1578] hover:text-white transition-all duration-300"
               >
-                Login
+                Login to LMS
               </a>
 
               <a
@@ -146,6 +147,13 @@ export default function Navbar() {
               ))}
 
               <div className="border-t border-gray-100 mt-4 pt-4 flex flex-col gap-3">
+                <a
+                  href={LMS_LOGIN_URL}
+                  className="py-3 rounded-full border border-[#3D1578]/20 text-center text-[#3D1578] font-medium hover:bg-[#3D1578] hover:text-white transition-all"
+                >
+                  Login to LMS
+                </a>
+
                 <a
                   href="#social-impact"
                   className="py-3 rounded-full border border-[#3D1578]/20 text-center text-[#3D1578] font-medium hover:bg-[#3D1578] hover:text-white transition-all"

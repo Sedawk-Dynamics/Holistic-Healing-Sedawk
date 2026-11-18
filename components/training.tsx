@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Check, Star } from 'lucide-react'
 import BookingButton from '@/components/booking-button'
+import { LMS_LOGIN_URL } from '@/lib/links'
 
 const programs = [
   {
@@ -182,6 +183,23 @@ export default function Training() {
             </motion.div>
           ))}
         </div>
+
+        {/* LMS login for enrolled students */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-center"
+        >
+          <p className="font-body text-[#3D1578]/70">Already enrolled? Access your course materials.</p>
+          <a
+            href={LMS_LOGIN_URL}
+            className="inline-flex items-center px-6 py-3 rounded-full bg-[#3D1578] text-white font-body font-semibold text-sm shadow-lg hover:bg-[#51209d] hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+          >
+            Login to LMS
+          </a>
+        </motion.div>
       </div>
     </section>
   )

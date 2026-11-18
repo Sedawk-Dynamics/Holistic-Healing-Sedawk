@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { CalendarCheck, ClipboardList, Beaker, Sprout, Sun } from 'lucide-react'
+import { LMS_LOGIN_URL } from '@/lib/links'
 
 const steps = [
   {
@@ -130,6 +131,18 @@ export default function HealingJourney() {
           >
             Begin Your Healing Journey Today
           </a>
+
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <span className="font-body text-sm text-[#3D1578]/60">Already a student?</span>
+            <a
+              href={LMS_LOGIN_URL}
+              className="inline-flex items-center px-6 py-2.5 rounded-full font-body text-sm font-semibold
+                border border-[#3D1578]/25 text-[#3D1578]
+                hover:bg-[#3D1578] hover:text-white transition-all duration-300"
+            >
+              Login to LMS
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
